@@ -95,18 +95,45 @@ const Reserva = () => {
   const ultimoDia = diasDeLaSemana[4];
   const mesPrimerDia = format(primerDia, "MMMM", { locale: es });
   const mesUltimoDia = format(ultimoDia, "MMMM", { locale: es });
-  const tituloMes = getMonth(primerDia) === getMonth(ultimoDia)
-      ? mesPrimerDia.charAt(0).toUpperCase() + mesPrimerDia.slice(1)
-      : `${mesPrimerDia.charAt(0).toUpperCase() + mesPrimerDia.slice(1)} / ${mesUltimoDia.charAt(0).toUpperCase() + mesUltimoDia.slice(1)}`;
+  const tituloMes =
+getMonth(primerDia) === getMonth(ultimoDia)
+  ? mesPrimerDia.charAt(0).toUpperCase() + mesPrimerDia.slice(1)
+  : `${mesPrimerDia.charAt(0).toUpperCase() + mesPrimerDia.slice(1)} / ${mesUltimoDia.charAt(0).toUpperCase() + mesUltimoDia.slice(1)}`;
 
   return (
     <div style={{ fontFamily: "sans-serif", padding: "24px", maxWidth: "600px", margin: "auto" }}>
       <h2 style={{ textAlign: "center", marginBottom: "24px" }}>Reservar {cancha.nombre}</h2>
 
-      {/* Selector de Fecha (sin cambios en su JSX) */}
-      <div>
-        {/* ... tu JSX para el selector de fecha ... */}
-      </div>
+      
+       <div>
+
+<div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
+
+    <h3 style={{ margin: "0", textTransform: "capitalize", fontSize: "1.2rem" }}>
+      {tituloMes}
+    </h3>
+    <a href="#" style={{ color: "#3b82f6", textDecoration: "none" }}>Otras fechas disponibles</a>
+  </div>
+  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+    <button onClick={irSemanaAnterior} style={styles.arrowButton}>&#8249;</button>
+    <div style={{ display: "flex", gap: "8px" }}>
+      {diasDeLaSemana.map((dia) => {
+        const esSeleccionado = format(dia, "yyyy-MM-dd") === format(fechaSeleccionada, "yyyy-MM-dd");
+        return (
+          <button
+            key={dia.toString()}
+            onClick={() => seleccionarFecha(dia)}
+            style={{ ...styles.dateButton, ...(esSeleccionado ? styles.dateButtonSelected : {}) }}
+          >
+            <span style={{ fontSize: "0.8rem", textTransform: "capitalize" }}>{format(dia, "E", { locale: es })}</span>
+            <span style={{ fontWeight: "bold", fontSize: "1.1rem" }}>{format(dia, "dd")}</span>
+          </button>
+        );
+      })}
+    </div>
+    <button onClick={irSemanaSiguiente} style={styles.arrowButton}>&#8250;</button>
+  </div>
+</div>
 
       {/* Selector de Hora (con lógica de deshabilitación actualizada) */}
       <div style={{ marginTop: "32px" }}>
@@ -142,20 +169,29 @@ const Reserva = () => {
       </div>
 
       {/* Resumen y Botón de Confirmación (sin cambios en su JSX) */}
-      {horaSeleccionada && (
-        <div style={{ marginTop: "32px", textAlign: "center" }}>
-          <div style={{ padding: "16px", backgroundColor: "#1e3a8a", borderRadius: "8px", color: "#fff" }}>
-            <strong>Resumen de la reserva:</strong><br />
-            {format(fechaSeleccionada, "EEEE, dd 'de' MMMM", { locale: es })} a las {horaSeleccionada}
-          </div>
-          <button
-            onClick={guardarReserva}
-            // ... tus estilos para el botón de confirmar
-          >
-            Confirmar reserva
-          </button>
-        </div>
-      )}
+{horaSeleccionada && (
+  <div style={{ marginTop: "32px", textAlign: "center" }}>
+    <div style={{ padding: "16px", backgroundColor: "#1e3a8a", borderRadius: "8px", color: "#fff" }}>
+      <strong>Resumen de la reserva:</strong><br />
+      {format(fechaSeleccionada, "EEEE, dd 'de' MMMM", { locale: es })} a las {horaSeleccionada}
+    </div>
+    <button
+      onClick={guardarReserva}
+      style={{
+        marginTop: "16px",
+        backgroundColor: "#22c55e",
+        color: "white",
+        padding: "12px 20px",
+        borderRadius: "8px",
+        border: "none",
+        cursor: "pointer",
+        fontWeight: "bold"
+      }}
+    >
+      Confirmar reserva
+    </button>
+  </div>
+)}
     </div>
   );
 };
