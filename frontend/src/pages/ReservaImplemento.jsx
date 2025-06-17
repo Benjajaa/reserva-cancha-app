@@ -1,6 +1,6 @@
-import { useAuth0 } from "@auth0/auth0-react";
+import { useAuth0 } from "../../frontend/node_modules/@auth0/auth0-react/src";
 import { implementos } from "../data/implementos";
-import { Link } from "react-router-dom";
+import { Link } from "../../frontend/node_modules/react-router-dom/dist/index.d.mts";
 
 const ReservaImplemento = () => {
   const { isAuthenticated, loginWithRedirect } = useAuth0();

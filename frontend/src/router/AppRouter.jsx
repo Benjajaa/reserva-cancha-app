@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "../../frontend/node_modules/react-router-dom/dist/index.d.mts";
 import Home from "../pages/Home";
 import ReservaCancha from "../pages/ReservaCancha";
 import ReservaImplemento from "../pages/ReservaImplemento";

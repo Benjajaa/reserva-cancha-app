@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams } from "../../frontend/node_modules/react-router-dom/dist/index.d.mts";
 import { canchas } from "../data/canchas";
-import { format, addDays, subDays, startOfWeek, getMonth, getDay } from "date-fns";
-import { es } from "date-fns/locale";
+import { format, addDays, subDays, startOfWeek, getMonth, getDay } from "../../frontend/node_modules/date-fns";
+import { es } from "../../frontend/node_modules/date-fns/locale";
 
 // Bloques de horarios disponibles
 const bloques = {

@@ -1,6 +1,6 @@
-import { useAuth0 } from "@auth0/auth0-react";
+import { useAuth0 } from "../../frontend/node_modules/@auth0/auth0-react/src";
 import { canchas } from "../data/canchas";
-import { Link } from "react-router-dom";
+import { Link } from "../../frontend/node_modules/react-router-dom/dist/index.d.mts";
 
 const Canchas = () => {
   const { isAuthenticated, loginWithRedirect } = useAuth0();
