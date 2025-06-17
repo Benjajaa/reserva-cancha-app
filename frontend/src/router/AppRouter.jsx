@@ -1,4 +1,8 @@
-import { BrowserRouter, Routes, Route } from '../../frontend/node_modules/react-router-dom/dist/index.d.mts';
+// frontend/src/router/AppRouter.jsx (Versión Corregida)
+
+// =====> CAMBIO 1: La importación ahora es directa desde el paquete
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+
 import Home from "../pages/Home";
 import ReservaCancha from "../pages/ReservaCancha";
 import ReservaImplemento from "../pages/ReservaImplemento";
@@ -7,15 +11,16 @@ import Reserva from "../pages/Reserva";
 
 const AppRouter = () => {
   return (
-    <Router>
+    // =====> CAMBIO 2: Se usa "BrowserRouter" en lugar de "Router"
+    <BrowserRouter>
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/cancha" element={<ReservaCancha />} />
-        <Route path="/implementos" element={<ReservaImplemento />} />
+        <Route path="/implementos"element={<ReservaImplemento />} />
         <Route path="/reserva/:id" element={<Reserva />} />
       </Routes>
-    </Router>
+    </BrowserRouter> // <===== Y se cierra con el mismo nombre
   );
 };
 
