@@ -9,6 +9,8 @@ import { es } from "date-fns/locale"; // <-- CORREGIDO
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 const API_URL = `${API_BASE_URL}/api`;
 
+console.log("Intentando conectar a la API en:", API_BASE_URL);
+
 const bloques = {
   mañana: ["8:10 am", "9:55 am", "11:40 am"],
   tarde: ["2:30 pm", "4:15 pm", "6:00 pm"]
