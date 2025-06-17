@@ -73,6 +73,7 @@ app.post('/api/reservas', async (req, res) => {
 
   // Validación simple de los datos recibidos
   if (!canchaId || !canchaNombre || !fecha || !hora || !nombreUsuario) {
+    
     return res.status(400).json({ message: 'Todos los campos son requeridos.' });
   }
 
