@@ -1,5 +1,5 @@
 import { Link } from "../../frontend/node_modules/react-router-dom/dist/index.d.mts";
-import { useAuth0 } from "../../frontend/node_modules/@auth0/auth0-react/src";
+import { useAuth0 } from '@auth0/auth0-react';
 import LoginButton from "./LoginButton";
 import LogoutButton from "./LogoutButton";
 
