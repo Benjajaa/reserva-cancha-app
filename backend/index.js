@@ -15,6 +15,10 @@ const PORT = process.env.PORT || 3001;
 app.use(cors());
 app.use(express.json());
 
+app.get('/', (req, res) => {
+  res.send('¡El API de Reservas está funcionando correctamente!');
+});
+
 // --- INICIO DE RUTAS DE LA API ---
 
 /**

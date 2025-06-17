@@ -1,11 +1,3 @@
-// Cambios Clave:
-// 1. Imports limpios y se añade 'axios'.
-// 2. Se define la URL de la API usando variables de entorno.
-// 3. Se añade el estado 'horasOcupadas' para guardar las reservas de la BD.
-// 4. Se añade un useEffect para LEER las reservas del día desde la API.
-// 5. La función 'guardarReserva' se reescribe para CREAR reservas llamando a la API.
-// 6. Los botones de hora ahora se deshabilitan según las 'horasOcupadas'.
-
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom"; // <-- CORREGIDO
 import axios from "axios"; // <-- AÑADIDO
