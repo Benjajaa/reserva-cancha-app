@@ -6,7 +6,7 @@ import { format, addDays, subDays, startOfWeek, getMonth, getDay } from "date-fn
 import { es } from "date-fns/locale"; // <-- CORREGIDO
 
 // --- CONFIGURACIÓN DE LA CONEXIÓN CON EL BACKEND ---
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://api-reservas-canchas.onrender.com';
 const API_URL = `${API_BASE_URL}/api`;
 
 const bloques = {
