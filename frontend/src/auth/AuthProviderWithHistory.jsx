@@ -1,4 +1,4 @@
-import { Auth0Provider } from "../../frontend/node_modules/@auth0/auth0-react/src";
+import { Auth0Provider } from '@auth0/auth0-react';
 
 const AuthProviderWithHistory = ({ children }) => {
   const domain = "dev-e3kmwnwixxg4ihnc.us.auth0.com";
