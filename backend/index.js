@@ -16,6 +16,7 @@ app.use(cors());
 app.use(express.json());
 
 app.get('/', (req, res) => {
+  console.log("Petición recibida en la ruta raíz '/'");
   res.send('¡El API de Reservas está funcionando correctamente!');
 });
 
@@ -62,6 +63,12 @@ app.get('/api/reservas', async (req, res) => {
  * @access  Public
  */
 app.post('/api/reservas', async (req, res) => {
+  // LOG 1: Para confirmar que la petición LLEGÓ a esta ruta
+  console.log('---------------------------------');
+  console.log('Petición POST a /api/reservas recibida.');
+
+  // LOG 2: Para ver exactamente qué datos nos está enviando el frontend
+  console.log('Datos recibidos en el body:', req.body);
   const { canchaId, canchaNombre, fecha, hora, nombreUsuario } = req.body;
 
   // Validación simple de los datos recibidos
@@ -72,6 +79,7 @@ app.post('/api/reservas', async (req, res) => {
   try {
     // 1. VERIFICAR SI EL HORARIO YA ESTÁ OCUPADO
     const fechaReserva = new Date(`${fecha}T00:00:00.000Z`);
+    // LOG 3: Para saber que estamos a punto de consultar la base de datos
     const reservaExistente = await prisma.reserva.findFirst({
       where: {
         fecha: fechaReserva,
@@ -82,10 +90,13 @@ app.post('/api/reservas', async (req, res) => {
 
     if (reservaExistente) {
       // Si ya existe, enviamos un error de "Conflicto"
+       console.log('Conflicto: El horario ya está reservado.');
       return res.status(409).json({ message: 'Este horario ya está reservado.' });
     }
 
     // 2. CREAR LA NUEVA RESERVA si el horario está libre
+    // LOG 4: Para saber que estamos a punto de crear la nueva reserva
+    console.log('Creando nueva reserva en la base de datos...');
     const nuevaReserva = await prisma.reserva.create({
       data: {
         canchaId,
@@ -96,9 +107,12 @@ app.post('/api/reservas', async (req, res) => {
       },
     });
 
+    console.log('¡Éxito! Reserva creada:', nuevaReserva);
     // Enviamos una respuesta de "Creado" con los datos de la nueva reserva
     res.status(201).json(nuevaReserva);
   } catch (error) {
+    // LOG 5: Si algo falla dentro del 'try', este log nos dirá exactamente qué fue
+    console.error('ERROR CATASTRÓFICO DENTRO DEL TRY/CATCH:', error);
     console.error('Error al crear la reserva:', error);
     res.status(500).json({ message: 'Error interno del servidor.' });
   }
