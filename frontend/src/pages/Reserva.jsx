@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom"; // <-- CORREGIDO
-import axios from "axios"; // <-- AÑADIDO
+import { useParams } from "react-router-dom"; 
+import axios from "axios"; 
 import { canchas } from "../data/canchas";
-import { format, addDays, subDays, startOfWeek, getMonth, getDay } from "date-fns"; // <-- CORREGIDO
-import { es } from "date-fns/locale"; // <-- CORREGIDO
+import { format, addDays, subDays, startOfWeek, getMonth, getDay } from "date-fns"; 
+import { es } from "date-fns/locale"; 
+
 
 // --- CONFIGURACIÓN DE LA CONEXIÓN CON EL BACKEND ---
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';

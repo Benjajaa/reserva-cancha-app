@@ -69,10 +69,10 @@ app.post('/api/reservas', async (req, res) => {
 
   // LOG 2: Para ver exactamente qué datos nos está enviando el frontend
   console.log('Datos recibidos en el body:', req.body);
-  const { canchaId, canchaNombre, fecha, hora, nombreUsuario } = req.body;
+  const { canchaId, canchaNombre, fecha, hora, usuario } = req.body;
 
   // Validación simple de los datos recibidos
-  if (!canchaId || !canchaNombre || !fecha || !hora || !nombreUsuario) {
+  if (!canchaId || !canchaNombre || !fecha || !hora || !usuario) {
      console.log('Error de validación: Faltan campos.'); // <-- ¡Este log debería aparecer ahora!
     return res.status(400).json({ message: 'Todos los campos son requeridos.' });
   }
@@ -104,7 +104,7 @@ app.post('/api/reservas', async (req, res) => {
         canchaNombre,
         fecha: fechaReserva,
         hora,
-        nombreUsuario,
+        usuario,
       },
     });
 
