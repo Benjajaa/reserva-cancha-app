@@ -11,13 +11,17 @@ const Navbar = () => {
       <h2 style={styles.logo}>Reservas UCN</h2>
       <ul style={styles.navList}>
         <li><Link to="/" style={styles.link}></Link></li>
-      </ul>
-      <div style={styles.authSection}>
-        {isAuthenticated ? (
+        {isAuthenticated && (
           <>
             <li><Link to="/cancha" style={styles.link}>Canchas</Link></li>
             <li><Link to="/implementos" style={styles.link}>Implementos</Link></li>
             <li><Link to="/historial" style={styles.link}>Historial</Link></li>
+          </>
+        )}
+      </ul>
+      <div style={styles.authSection}>
+        {isAuthenticated ? (
+          <>
             <span style={styles.userName}>{user.name}</span>
             <img
               src={user.picture}
