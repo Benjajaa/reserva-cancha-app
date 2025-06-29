@@ -12,6 +12,7 @@ const AppRouter = () => {
       <Navbar />
       <Routes>
         <Route path="/home" element={<Home />} />
+        <Route path="/" element={<Home />} />
         <Route path="/cancha" element={<ReservaCancha />} />
         <Route path="/implementos"element={<ReservaImplemento />} />
         <Route path="/reserva/:id" element={<Reserva />} />

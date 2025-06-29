@@ -10,7 +10,7 @@ const Navbar = () => {
     <nav style={styles.navbar}>
       <h2 style={styles.logo}>Reservas UCN</h2>
       <ul style={styles.navList}>
-        <li><Link to="/" style={styles.link}></Link></li>
+        <li><Link to="/" style={styles.link}>Inicio</Link></li>
         {isAuthenticated && (
           <>
             <li><Link to="/home" style={styles.link}>Inicio</Link></li>
