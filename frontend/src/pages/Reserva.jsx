@@ -25,11 +25,7 @@ const Reserva = () => {
   const [semanaActual, setSemanaActual] = useState(startOfWeek(new Date(), { weekStartsOn: 1 }));
   const [fechaSeleccionada, setFechaSeleccionada] = useState(new Date());
   const [horaSeleccionada, setHoraSeleccionada] = useState(null);
-  
-  // ---> NUEVO ESTADO: Guarda las horas que ya están reservadas en la BD para el día seleccionado
   const [horasOcupadas, setHorasOcupadas] = useState([]);
-
-  // ---> NUEVO useEffect: Se ejecuta cuando cambia la fecha para LEER las reservas de la BD
   useEffect(() => {
     const fetchReservasDelDia = async () => {
       const fechaFormato = format(fechaSeleccionada, 'yyyy-MM-dd');
@@ -43,11 +39,9 @@ const Reserva = () => {
       }
     };
     fetchReservasDelDia();
-  }, [fechaSeleccionada]); // Se dispara cada vez que cambia la fecha
+  }, [fechaSeleccionada]);
 
   if (!cancha) return <div>Cancha no encontrada</div>;
-
-  // ---> FUNCIÓN ACTUALIZADA: Ahora guarda en la BD a través de la API
   const guardarReserva = async () => {
     if (!horaSeleccionada) {
       alert("Por favor, selecciona una hora para continuar.");
@@ -58,14 +52,12 @@ const Reserva = () => {
       canchaNombre: cancha.nombre,
       fecha: format(fechaSeleccionada, "yyyy-MM-dd"),
       hora: horaSeleccionada,
-      usuario: user.name, // En un futuro, esto vendría de Auth0
+      usuario: user.name,
     };
 
     try {
       await axios.post(`${API_URL}/reservas`, nuevaReserva);
       alert("¡Reserva creada exitosamente!");
-      
-      // Actualiza la UI al instante para mostrar la nueva reserva como ocupada
       setHorasOcupadas([...horasOcupadas, horaSeleccionada]);
       setHoraSeleccionada(null);
 
@@ -91,11 +83,9 @@ const Reserva = () => {
   const ultimoDia = diasDeLaSemana[4];
   const mesPrimerDia = format(primerDia, "MMMM", { locale: es });
   const mesUltimoDia = format(ultimoDia, "MMMM", { locale: es });
-  const tituloMes =
-getMonth(primerDia) === getMonth(ultimoDia)
-  ? mesPrimerDia.charAt(0).toUpperCase() + mesPrimerDia.slice(1)
-  : `${mesPrimerDia.charAt(0).toUpperCase() + mesPrimerDia.slice(1)} / ${mesUltimoDia.charAt(0).toUpperCase() + mesUltimoDia.slice(1)}`;
-
+  const tituloMes = getMonth(primerDia) === getMonth(ultimoDia)
+    ? mesPrimerDia.charAt(0).toUpperCase() + mesPrimerDia.slice(1)
+    : `${mesPrimerDia.charAt(0).toUpperCase() + mesPrimerDia.slice(1)} / ${mesUltimoDia.charAt(0).toUpperCase() + mesUltimoDia.slice(1)}`;
   return (
     <div style={{ fontFamily: "sans-serif", padding: "24px", maxWidth: "600px", margin: "auto" }}>
       <h2 style={{ textAlign: "center", marginBottom: "24px" }}>Reservar {cancha.nombre}</h2>
