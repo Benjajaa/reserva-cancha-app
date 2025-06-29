@@ -13,7 +13,6 @@ const Navbar = () => {
         <li><Link to="/" style={styles.link}></Link></li>
         {isAuthenticated && (
           <>
-            <li><Link to="/" style={styles.link}>Inicio</Link></li>
             <li><Link to="/cancha" style={styles.link}>Canchas</Link></li>
             <li><Link to="/implementos" style={styles.link}>Implementos</Link></li>
           </>
@@ -22,7 +21,7 @@ const Navbar = () => {
       <div style={styles.authSection}>
         {isAuthenticated ? (
           <>
-            <span style={styles.userName}>{user.name}</span>
+            <span>{user.name}</span>
             <img
               src={user.picture}
               alt="Perfil"
