@@ -21,7 +21,7 @@ const Navbar = () => {
       <div style={styles.authSection}>
         {isAuthenticated ? (
           <>
-            <span>{user.name}</span>
+            <span style={styles.link}>{user.name}</span>
             <img
               src={user.picture}
               alt="Perfil"
@@ -64,9 +64,6 @@ const styles = {
     display: "flex",
     alignItems: "center",
     gap: "10px"
-  },
-  userName: {
-    fontSize: "0.9rem"
   },
   avatar: {
     width: "30px",
