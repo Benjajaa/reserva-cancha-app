@@ -17,3 +17,14 @@ model Reserva {
   hora         String
   creadaEn     DateTime @default(now())
 }
+// Modelo para reservas de implementos
+model ReservaImplemento {
+  id              String   @id @default(cuid())
+  implementoId    Int
+  implementoNombre String
+  fecha           DateTime @db.Date
+  nombreUsuario   String
+  hora            String
+  creadaEn        DateTime @default(now())
+}
+
