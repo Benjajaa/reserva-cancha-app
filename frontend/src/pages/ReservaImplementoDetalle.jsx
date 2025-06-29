@@ -2,111 +2,233 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { implementos } from "../data/implementos";
 import axios from "axios";
-import { format } from "date-fns";
+import { format, addDays, subDays, startOfWeek, getMonth, getDay } from "date-fns";
+import { es } from "date-fns/locale";
 import { useAuth0 } from '@auth0/auth0-react';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 const API_URL = `${API_BASE_URL}/api`;
+
+const bloques = {
+  mañana: ["8:10 am", "9:55 am", "11:40 am"],
+  tarde: ["2:30 pm", "4:15 pm", "6:00 pm"]
+};
 
 const ReservaImplementoDetalle = () => {
   const { id } = useParams();
   const implemento = implementos.find((i) => i.id.toString() === id);
   const { user } = useAuth0();
 
-  const [fecha, setFecha] = useState(() => format(new Date(), "yyyy-MM-dd"));
-  const [cantidad, setCantidad] = useState(1);
-  const [stockDisponible, setStockDisponible] = useState(null);
+  const [semanaActual, setSemanaActual] = useState(startOfWeek(new Date(), { weekStartsOn: 1 }));
+  const [fechaSeleccionada, setFechaSeleccionada] = useState(new Date());
+  const [horaSeleccionada, setHoraSeleccionada] = useState(null);
+  const [horasOcupadas, setHorasOcupadas] = useState([]);
 
   useEffect(() => {
-    const fetchDisponibilidad = async () => {
+    const fetchReservas = async () => {
+      const fechaFormato = format(fechaSeleccionada, "yyyy-MM-dd");
       try {
-        const res = await axios.get(`${API_URL}/reservas-implementos`, {
-          params: { fecha, implementoId: id }
-        });
-
-        const cantidadReservada = res.data.reduce((total, r) => total + r.cantidad, 0);
-        const stockTotal = implemento.stock || 10; // Stock predeterminado
-        setStockDisponible(stockTotal - cantidadReservada);
+        const res = await axios.get(`${API_URL}/reservas-implementos?fecha=${fechaFormato}&implementoId=${id}`);
+        const horas = res.data.map(r => r.hora);
+        setHorasOcupadas(horas);
       } catch (err) {
         console.error("Error al obtener reservas:", err);
-        setStockDisponible(null);
+        setHorasOcupadas([]);
       }
     };
-
-    fetchDisponibilidad();
-  }, [fecha, id, implemento]);
-
-  const guardarReserva = async () => {
-    if (!user || !implemento) return;
-
-    if (cantidad < 1 || cantidad > stockDisponible) {
-      alert("Cantidad inválida o insuficiente stock.");
-      return;
-    }
-
-    try {
-      await axios.post(`${API_URL}/reservas-implementos`, {
-        implementoId: implemento.id,
-        implementoNombre: implemento.nombre,
-        fecha,
-        cantidad,
-        usuario: user.name,
-      });
-      alert("¡Reserva creada exitosamente!");
-      setCantidad(1);
-    } catch (err) {
-      console.error("Error al crear la reserva:", err);
-      alert("Error al crear la reserva.");
-    }
-  };
+    fetchReservas();
+  }, [fechaSeleccionada, id]);
 
   if (!implemento) return <div>Implemento no encontrado</div>;
 
+  const guardarReserva = async () => {
+    if (!horaSeleccionada) {
+      alert("Por favor, selecciona una hora.");
+      return;
+    }
+
+    const nuevaReserva = {
+      implementoId: implemento.id,
+      implementoNombre: implemento.nombre,
+      fecha: format(fechaSeleccionada, "yyyy-MM-dd"),
+      hora: horaSeleccionada,
+      usuario: user.name,
+      cantidad: 1
+    };
+
+    try {
+      await axios.post(`${API_URL}/reservas-implementos`, nuevaReserva);
+      alert("¡Reserva creada exitosamente!");
+      setHorasOcupadas([...horasOcupadas, horaSeleccionada]);
+      setHoraSeleccionada(null);
+    } catch (error) {
+      if (error.response && error.response.status === 409) {
+        alert("Este horario ya está reservado.");
+      } else {
+        console.error("Error al crear la reserva:", error);
+        alert("No se pudo crear la reserva.");
+      }
+    }
+  };
+
+  const seleccionarFecha = (dia) => {
+    setFechaSeleccionada(dia);
+    setHoraSeleccionada(null);
+  };
+
+  const irSemanaSiguiente = () => setSemanaActual(addDays(semanaActual, 7));
+  const irSemanaAnterior = () => setSemanaActual(subDays(semanaActual, 7));
+  const diasDeLaSemana = Array.from({ length: 5 }, (_, i) => addDays(semanaActual, i));
+  const primerDia = diasDeLaSemana[0];
+  const ultimoDia = diasDeLaSemana[4];
+  const mesPrimerDia = format(primerDia, "MMMM", { locale: es });
+  const mesUltimoDia = format(ultimoDia, "MMMM", { locale: es });
+  const tituloMes = getMonth(primerDia) === getMonth(ultimoDia)
+    ? mesPrimerDia.charAt(0).toUpperCase() + mesPrimerDia.slice(1)
+    : `${mesPrimerDia.charAt(0).toUpperCase() + mesPrimerDia.slice(1)} / ${mesUltimoDia.charAt(0).toUpperCase() + mesUltimoDia.slice(1)}`;
+
   return (
-    <div style={{ padding: "24px", fontFamily: "sans-serif", maxWidth: "600px", margin: "auto" }}>
-      <h2>Reservar {implemento.nombre}</h2>
+    <div style={{ fontFamily: "sans-serif", padding: "24px", maxWidth: "600px", margin: "auto" }}>
+      <h2 style={{ textAlign: "center", marginBottom: "24px" }}>Reservar {implemento.nombre}</h2>
 
-      <div style={{ marginBottom: "16px" }}>
-        <label>Fecha:</label>
-        <input
-          type="date"
-          value={fecha}
-          onChange={(e) => setFecha(e.target.value)}
-          style={{ marginLeft: "8px", padding: "4px", borderRadius: "4px", border: "1px solid #ccc" }}
-        />
+      <div>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
+          <h3 style={{ margin: "0", textTransform: "capitalize", fontSize: "1.2rem" }}>{tituloMes}</h3>
+          <a href="#" style={{ color: "#3b82f6", textDecoration: "none" }}>Otras fechas disponibles</a>
+        </div>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+          <button onClick={irSemanaAnterior} style={styles.arrowButton}>&#8249;</button>
+          <div style={{ display: "flex", gap: "8px" }}>
+            {diasDeLaSemana.map((dia) => {
+              const esSeleccionado = format(dia, "yyyy-MM-dd") === format(fechaSeleccionada, "yyyy-MM-dd");
+              return (
+                <button
+                  key={dia.toString()}
+                  onClick={() => seleccionarFecha(dia)}
+                  style={{ ...styles.dateButton, ...(esSeleccionado ? styles.dateButtonSelected : {}) }}
+                >
+                  <span style={{ fontSize: "0.8rem", textTransform: "capitalize" }}>{format(dia, "E", { locale: es })}</span>
+                  <span style={{ fontWeight: "bold", fontSize: "1.1rem" }}>{format(dia, "dd")}</span>
+                </button>
+              );
+            })}
+          </div>
+          <button onClick={irSemanaSiguiente} style={styles.arrowButton}>&#8250;</button>
+        </div>
       </div>
 
-      <div style={{ marginBottom: "16px" }}>
-        <label>Cantidad:</label>
-        <input
-          type="number"
-          min="1"
-          value={cantidad}
-          onChange={(e) => setCantidad(Number(e.target.value))}
-          style={{ marginLeft: "8px", width: "60px", padding: "4px", borderRadius: "4px", border: "1px solid #ccc" }}
-        />
+      <div style={{ marginTop: "32px" }}>
+        {["mañana", "tarde"].map(periodo => (
+          <div key={periodo}>
+            <p style={{ margin: '24px 0 8px 0', textTransform: 'capitalize' }}>{periodo}</p>
+            <div style={styles.bloqueHorario}>
+              {bloques[periodo].map(hora => {
+                const esMiercoles = getDay(fechaSeleccionada) === 3;
+                const esHoraBloqueada = hora === "9:55 am";
+                const estaOcupada = horasOcupadas.includes(hora);
+                const estaDeshabilitado = (esMiercoles && esHoraBloqueada) || estaOcupada;
+
+                return (
+                  <button
+                    key={hora}
+                    onClick={() => setHoraSeleccionada(hora)}
+                    disabled={estaDeshabilitado}
+                    style={{
+                      ...styles.timeButton,
+                      ...(estaDeshabilitado ? styles.timeButtonDisabled : {}),
+                      ...(hora === horaSeleccionada ? styles.timeButtonSelected : {}),
+                    }}
+                  >
+                    {hora}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        ))}
       </div>
 
-      <div style={{ marginBottom: "16px" }}>
-        <strong>Stock disponible:</strong> {stockDisponible !== null ? stockDisponible : "Cargando..."}
-      </div>
-
-      <button
-        onClick={guardarReserva}
-        style={{
-          backgroundColor: "#3b82f6",
-          color: "white",
-          padding: "10px 20px",
-          border: "none",
-          borderRadius: "8px",
-          cursor: "pointer",
-          fontWeight: "bold"
-        }}
-      >
-        Confirmar Reserva
-      </button>
+      {horaSeleccionada && (
+        <div style={{ marginTop: "32px", textAlign: "center" }}>
+          <div style={{ padding: "16px", backgroundColor: "#1e3a8a", borderRadius: "8px", color: "#fff" }}>
+            <strong>Resumen de la reserva:</strong><br />
+            {format(fechaSeleccionada, "EEEE, dd 'de' MMMM", { locale: es })} a las {horaSeleccionada}
+          </div>
+          <button
+            onClick={guardarReserva}
+            style={{
+              marginTop: "16px",
+              backgroundColor: "#22c55e",
+              color: "white",
+              padding: "12px 20px",
+              borderRadius: "8px",
+              border: "none",
+              cursor: "pointer",
+              fontWeight: "bold"
+            }}
+          >
+            Confirmar reserva
+          </button>
+        </div>
+      )}
     </div>
   );
+};
+
+const styles = {
+  arrowButton: {
+    background: "transparent",
+    border: "none",
+    fontSize: "1.5rem",
+    cursor: "pointer",
+    padding: "0 10px"
+  },
+  dateButton: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    border: '1px solid transparent',
+    borderRadius: '8px',
+    padding: '8px',
+    background: '#f3f4f6',
+    color: 'black',
+    cursor: 'pointer',
+    width: '50px',
+    height: '50px'
+  },
+  dateButtonSelected: {
+    background: '#3b82f6',
+    color: 'white',
+    borderColor: '#3b82f6'
+  },
+  timeButtonDisabled: {
+    backgroundColor: '#f3f4f6',
+    color: '#9ca3af',
+    cursor: 'not-allowed',
+    borderColor: '#e5e7eb'
+  },
+  timeButton: {
+    padding: "10px 16px",
+    background: "white",
+    color: "black",
+    border: "1px solid #d1d5db",
+    borderRadius: "8px",
+    cursor: "pointer",
+    fontSize: "0.9rem"
+  },
+  timeButtonSelected: {
+    background: "#3b82f6",
+    color: "white",
+    border: "1px solid #3b82f6"
+  },
+  bloqueHorario: {
+    borderTop: '1px solid #eee',
+    paddingTop: '16px',
+    display: "flex",
+    gap: "10px",
+    flexWrap: "wrap"
+  }
 };
 
 export default ReservaImplementoDetalle;
