@@ -2,21 +2,22 @@ export const implementos = [
   {
     id: 1,
     nombre: "Pelota de Fútbol",
-    tipo: "Fútbol",
+    stock: 5,
   },
   {
     id: 2,
     nombre: "Pelota de Tenis",
-    tipo: "Tenis",
+    stock: 3,
   },
   {
     id: 3,
     nombre: "Pelota de Vóley",
-    tipo: "Vóley",
+    stock: 4,
   },
   {
     id: 4,
     nombre: "Balón de Básquet",
-    tipo: "Básquet",
+    stock: 6,
   },
 ];
+
