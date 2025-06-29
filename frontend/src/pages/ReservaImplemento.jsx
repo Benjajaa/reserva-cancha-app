@@ -21,7 +21,6 @@ const ReservaImplemento = () => {
           <li key={implemento.id} style={{ marginBottom: "20px" }}>
             <div style={{ background: "#1e3a8a", padding: "10px", borderRadius: "8px" }}>
               <h2 style={{ color: "#fff" }}>{implemento.nombre}</h2>
-              {implemento.tipo && <p style={{ color: "#fff" }}>Tipo: {implemento.tipo}</p>}
               <Link to={`/reserva/${implemento.id}`} style={{ color: "#1e3a8a", padding: "8px 12px", borderRadius: "4px", textDecoration: "none", background: "#FFFFFF" }}>Reservar</Link>
             </div>
           </li>
