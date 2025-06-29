@@ -104,7 +104,7 @@ app.post('/api/reservas', async (req, res) => {
         canchaNombre,
         fecha: fechaReserva,
         hora,
-        usuario,
+        nombreUsuario: usuario,
       },
     });
 
