@@ -182,7 +182,6 @@ const Reserva = () => {
   );
 };
 
-// --- Estilos (sin cambios) ---
 const styles = {
   arrowButton: {
     background: "transparent",
