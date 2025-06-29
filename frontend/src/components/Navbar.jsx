@@ -13,9 +13,9 @@ const Navbar = () => {
         <li><Link to="/" style={styles.link}></Link></li>
         {isAuthenticated && (
           <>
+            <li><Link to="/home" style={styles.link}>Inicio</Link></li>
             <li><Link to="/cancha" style={styles.link}>Canchas</Link></li>
             <li><Link to="/implementos" style={styles.link}>Implementos</Link></li>
-            <li><Link to="/historial" style={styles.link}>Historial</Link></li>
           </>
         )}
       </ul>
