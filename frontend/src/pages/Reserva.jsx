@@ -3,7 +3,8 @@ import { useParams } from "react-router-dom";
 import axios from "axios"; 
 import { canchas } from "../data/canchas";
 import { format, addDays, subDays, startOfWeek, getMonth, getDay } from "date-fns"; 
-import { es } from "date-fns/locale"; 
+import { es } from "date-fns/locale";
+import { useAuth0 } from '@auth0/auth0-react';
 
 
 // --- CONFIGURACIÓN DE LA CONEXIÓN CON EL BACKEND ---
@@ -20,7 +21,7 @@ const bloques = {
 const Reserva = () => {
   const { id } = useParams();
   const cancha = canchas.find((c) => c.id.toString() === id);
-
+  const { user} = useAuth0();
   const [semanaActual, setSemanaActual] = useState(startOfWeek(new Date(), { weekStartsOn: 1 }));
   const [fechaSeleccionada, setFechaSeleccionada] = useState(new Date());
   const [horaSeleccionada, setHoraSeleccionada] = useState(null);
@@ -57,7 +58,7 @@ const Reserva = () => {
       canchaNombre: cancha.nombre,
       fecha: format(fechaSeleccionada, "yyyy-MM-dd"),
       hora: horaSeleccionada,
-      usuario: "Usuario Web", // En un futuro, esto vendría de Auth0
+      usuario: user.name, // En un futuro, esto vendría de Auth0
     };
 
     try {
