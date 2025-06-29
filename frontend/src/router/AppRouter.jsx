@@ -5,7 +5,7 @@ import ReservaCancha from "../pages/ReservaCancha";
 import ReservaImplemento from "../pages/ReservaImplemento";
 import Navbar from "../components/Navbar";
 import Reserva from "../pages/Reserva";
-import ReservaImplementoDetalle from '../pages/Reserva-Implementos';
+import ReservaImplementoDetalle from '../pages/ReservaImplementoDetalle';
 
 const AppRouter = () => {
   return (

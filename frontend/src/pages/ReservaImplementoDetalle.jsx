@@ -110,4 +110,3 @@ const ReservaImplementoDetalle = () => {
 };
 
 export default ReservaImplementoDetalle;
-
