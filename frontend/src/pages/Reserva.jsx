@@ -49,14 +49,14 @@ const Reserva = () => {
       canchaId: cancha.id,
       canchaNombre: cancha.nombre,
       fecha: format(fechaSeleccionada, "yyyy-MM-dd"),
-      hora: horaSeleccionada,
+      hora: horaSeleccionada.hora,
       usuario: user.name,
     };
 
     try {
       await axios.post(`${API_URL}/reservas`, nuevaReserva);
       alert("¡Reserva creada exitosamente!");
-      await fetchReservasDelDia(); // Refrescar las horas ocupadas
+      await fetchReservasDelDia();
       setHoraSeleccionada(null);
 
     } catch (error) {
@@ -135,12 +135,15 @@ const Reserva = () => {
                 return (
                   <button
                     key={hora}
-                    onClick={() => setHoraSeleccionada(hora)}
+                    onClick={() => setHoraSeleccionada({ fecha: fechaSeleccionada, hora })}
                     disabled={estaDeshabilitado}
                     style={{
                       ...styles.timeButton,
                       ...(estaDeshabilitado ? styles.timeButtonDisabled : {}),
-                      ...(hora === horaSeleccionada ? styles.timeButtonSelected : {}),
+                      ...(horaSeleccionada && hora === horaSeleccionada.hora && format(fechaSeleccionada, "yyyy-MM-dd") === format(horaSeleccionada.fecha, "yyyy-MM-dd")
+  ? styles.timeButtonSelected
+  : {}),
+
                     }}
                   >
                     {hora}
