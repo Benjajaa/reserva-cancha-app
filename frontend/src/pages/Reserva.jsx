@@ -140,7 +140,10 @@ const Reserva = () => {
                     style={{
                       ...styles.timeButton,
                       ...(estaDeshabilitado ? styles.timeButtonDisabled : {}),
-                      ...(hora === horaSeleccionada ? styles.timeButtonSelected : {}),
+                      ...(hora === horaSeleccionada && format(fechaSeleccionada, "yyyy-MM-dd") === format(new Date(), "yyyy-MM-dd")
+                      ? styles.timeButtonSelected
+                      : {}),
+
                     }}
                   >
                     {hora}
