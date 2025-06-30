@@ -24,18 +24,18 @@ const Reserva = () => {
   const [fechaSeleccionada, setFechaSeleccionada] = useState(new Date());
   const [horaSeleccionada, setHoraSeleccionada] = useState(null);
   const [horasOcupadas, setHorasOcupadas] = useState([]);
+  const fetchReservasDelDia = async () => {
+    const fechaFormato = format(fechaSeleccionada, 'yyyy-MM-dd');
+    try {
+      const response = await axios.get(`${API_URL}/reservas?fecha=${fechaFormato}`);
+      const horas = response.data.map(reserva => reserva.hora);
+      setHorasOcupadas(horas);
+    } catch (error) {
+      console.error("Error al obtener las reservas:", error);
+      setHorasOcupadas([]);
+    }
+  };
   useEffect(() => {
-    const fetchReservasDelDia = async () => {
-      const fechaFormato = format(fechaSeleccionada, 'yyyy-MM-dd');
-      try {
-        const response = await axios.get(`${API_URL}/reservas?fecha=${fechaFormato}`);
-        const horas = response.data.map(reserva => reserva.hora);
-        setHorasOcupadas(horas);
-      } catch (error) {
-        console.error("Error al obtener las reservas:", error);
-        setHorasOcupadas([]);
-      }
-    };
     fetchReservasDelDia();
   }, [fechaSeleccionada]);
 
@@ -56,7 +56,7 @@ const Reserva = () => {
     try {
       await axios.post(`${API_URL}/reservas`, nuevaReserva);
       alert("¡Reserva creada exitosamente!");
-      setHorasOcupadas([...horasOcupadas, horaSeleccionada]);
+      await fetchReservasDelDia(); // Refrescar las horas ocupadas
       setHoraSeleccionada(null);
 
     } catch (error) {
