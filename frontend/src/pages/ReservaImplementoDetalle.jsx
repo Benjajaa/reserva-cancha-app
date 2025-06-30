@@ -21,7 +21,7 @@ const ReservaImplementoDetalle = () => {
 
   const [semanaActual, setSemanaActual] = useState(startOfWeek(new Date(), { weekStartsOn: 1 }));
   const [fechaSeleccionada, setFechaSeleccionada] = useState(new Date());
-  const [horaSeleccionada, setHoraSeleccionada] = useState({ fecha: null, hora: null });
+  const [horaSeleccionada, setHoraSeleccionada] = useState(null);
   const [horasOcupadas, setHorasOcupadas] = useState([]);
 
   useEffect(() => {
@@ -51,7 +51,7 @@ const ReservaImplementoDetalle = () => {
       implementoId: implemento.id,
       implementoNombre: implemento.nombre,
       fecha: format(fechaSeleccionada, "yyyy-MM-dd"),
-      hora: horaSeleccionada.hora,
+      hora: horaSeleccionada,
       usuario: user.name,
       cantidad: 1
     };
@@ -131,16 +131,12 @@ const ReservaImplementoDetalle = () => {
                 return (
                   <button
                     key={hora}
-                    onClick={() => setHoraSeleccionada({ fecha: fechaSeleccionada, hora })}
-
+                    onClick={() => setHoraSeleccionada(hora)}
                     disabled={estaDeshabilitado}
                     style={{
                       ...styles.timeButton,
                       ...(estaDeshabilitado ? styles.timeButtonDisabled : {}),
-                      ...(horaSeleccionada && hora === horaSeleccionada.hora && format(fechaSeleccionada, "yyyy-MM-dd") === format(horaSeleccionada.fecha, "yyyy-MM-dd")
-  ? styles.timeButtonSelected
-  : {}),
-
+                      ...(hora === horaSeleccionada ? styles.timeButtonSelected : {}),
                     }}
                   >
                     {hora}

@@ -49,7 +49,7 @@ const Reserva = () => {
       canchaId: cancha.id,
       canchaNombre: cancha.nombre,
       fecha: format(fechaSeleccionada, "yyyy-MM-dd"),
-      hora: horaSeleccionada.hora,
+      hora: horaSeleccionada,
       usuario: user.name,
     };
 
@@ -135,15 +135,12 @@ const Reserva = () => {
                 return (
                   <button
                     key={hora}
-                    onClick={() => setHoraSeleccionada({ fecha: fechaSeleccionada, hora })}
+                    onClick={() => setHoraSeleccionada(hora)}
                     disabled={estaDeshabilitado}
                     style={{
                       ...styles.timeButton,
                       ...(estaDeshabilitado ? styles.timeButtonDisabled : {}),
-                      ...(horaSeleccionada && hora === horaSeleccionada.hora && format(fechaSeleccionada, "yyyy-MM-dd") === format(horaSeleccionada.fecha, "yyyy-MM-dd")
-  ? styles.timeButtonSelected
-  : {}),
-
+                      ...(hora === horaSeleccionada ? styles.timeButtonSelected : {}),
                     }}
                   >
                     {hora}
