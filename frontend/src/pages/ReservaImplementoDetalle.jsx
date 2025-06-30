@@ -120,67 +120,68 @@ const ReservaImplementoDetalle = () => {
       </div>
 
       {cargandoReservas ? (
-        <p style={{ marginTop: "32px", textAlign: "center" }}>Cargando disponibilidad...</p>
-      ) : (
-        <>
-      <div style={{ marginTop: "32px" }}>
-        {["mañana", "tarde"].map(periodo => (
-          <div key={periodo}>
-            <p style={{ margin: '24px 0 8px 0', textTransform: 'capitalize' }}>{periodo}</p>
-            <div style={styles.bloqueHorario}>
-              {bloques[periodo].map(hora => {
-                const esMiercoles = getDay(fechaSeleccionada) === 3;
-                const esHoraBloqueada = hora === "9:55 am";
-                const estaOcupada = horasOcupadas.includes(hora);
-                const estaDeshabilitado = (esMiercoles && esHoraBloqueada) || estaOcupada;
-
-                return (
-                  <button
-                    key={hora}
-                    onClick={() => setHoraSeleccionada(hora)}
-                    disabled={estaDeshabilitado}
-                    style={{
-                      ...styles.timeButton,
-                      ...(estaDeshabilitado ? styles.timeButtonDisabled : {}),
-                      ...(hora === horaSeleccionada ? styles.timeButtonSelected : {}),
-                    }}
-                  >
-                    {hora}
-                  </button>
-                );
-              })}
-            </div>
+              <p style={{ marginTop: "32px", textAlign: "center" }}>Cargando disponibilidad...</p>
+            ) : (
+              <>
+                <div style={{ marginTop: "32px" }}>
+                  {['mañana', 'tarde'].map(periodo => (
+                    <div key={periodo}>
+                      <p style={{ margin: '24px 0 8px 0', textTransform: 'capitalize' }}>{periodo}</p>
+                      <div style={styles.bloqueHorario}>
+                        {bloques[periodo].map(hora => {
+                          const esMiercoles = getDay(fechaSeleccionada) === 3;
+                          const esHoraBloqueada = hora === "9:55 am";
+                          const estaOcupada = horasOcupadas.includes(hora);
+                          const estaDeshabilitado = (esMiercoles && esHoraBloqueada) || estaOcupada;
+      
+                          return (
+                            <button
+                              key={hora}
+                              onClick={() => setHoraSeleccionada(hora)}
+                              disabled={estaDeshabilitado}
+                              style={{
+                                ...styles.timeButton,
+                                ...(estaDeshabilitado ? styles.timeButtonDisabled : {}),
+                                ...(hora === horaSeleccionada ? styles.timeButtonSelected : {}),
+                              }}
+                            >
+                              {hora}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+      
+                {horaSeleccionada && (
+                  <div style={{ marginTop: "32px", textAlign: "center" }}>
+                    <div style={{ padding: "16px", backgroundColor: "#1e3a8a", borderRadius: "8px", color: "#fff" }}>
+                      <strong>Resumen de la reserva:</strong><br />
+                      {format(fechaSeleccionada, "EEEE, dd 'de' MMMM", { locale: es })} a las {horaSeleccionada}
+                    </div>
+                    <button
+                      onClick={guardarReserva}
+                      style={{
+                        marginTop: "16px",
+                        backgroundColor: "#22c55e",
+                        color: "white",
+                        padding: "12px 20px",
+                        borderRadius: "8px",
+                        border: "none",
+                        cursor: "pointer",
+                        fontWeight: "bold"
+                      }}
+                    >
+                      Confirmar reserva
+                    </button>
+                  </div>
+                )}
+              </>
+            )}
           </div>
-        ))}
-      </div>
-
-      {horaSeleccionada && (
-        <div style={{ marginTop: "32px", textAlign: "center" }}>
-          <div style={{ padding: "16px", backgroundColor: "#1e3a8a", borderRadius: "8px", color: "#fff" }}>
-            <strong>Resumen de la reserva:</strong><br />
-            {format(fechaSeleccionada, "EEEE, dd 'de' MMMM", { locale: es })} a las {horaSeleccionada}
-          </div>
-          <button
-            onClick={guardarReserva}
-            style={{
-              marginTop: "16px",
-              backgroundColor: "#22c55e",
-              color: "white",
-              padding: "12px 20px",
-              borderRadius: "8px",
-              border: "none",
-              cursor: "pointer",
-              fontWeight: "bold"
-            }}
-          >
-            Confirmar reserva
-          </button>
-        </div>
-      )}</>
-      )},
-    </div>
-  );
-};
+        );
+      };
 
 const styles = {
   arrowButton: {
