@@ -28,6 +28,7 @@ const ReservaImplementoDetalle = () => {
   useEffect(() => {
     const fetchReservas = async () => {
       setCargandoReservas(true); // limpia estado visual
+      setHorasOcupadas([]);
       const fechaFormato = format(fechaSeleccionada, "yyyy-MM-dd");
       try {
         const res = await axios.get(`${API_URL}/reservas-implementos?fecha=${fechaFormato}&implementoId=${id}`);
