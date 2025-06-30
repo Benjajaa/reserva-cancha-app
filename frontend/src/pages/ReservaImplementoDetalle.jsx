@@ -23,9 +23,11 @@ const ReservaImplementoDetalle = () => {
   const [fechaSeleccionada, setFechaSeleccionada] = useState(new Date());
   const [horaSeleccionada, setHoraSeleccionada] = useState(null);
   const [horasOcupadas, setHorasOcupadas] = useState([]);
+  const [cargandoReservas, setCargandoReservas] = useState(true);
 
   useEffect(() => {
     const fetchReservas = async () => {
+      setCargandoReservas(true); // limpia estado visual
       const fechaFormato = format(fechaSeleccionada, "yyyy-MM-dd");
       try {
         const res = await axios.get(`${API_URL}/reservas-implementos?fecha=${fechaFormato}&implementoId=${id}`);
@@ -117,6 +119,10 @@ const ReservaImplementoDetalle = () => {
         </div>
       </div>
 
+      {cargandoReservas ? (
+        <p style={{ marginTop: "32px", textAlign: "center" }}>Cargando disponibilidad...</p>
+      ) : (
+        <>
       <div style={{ marginTop: "32px" }}>
         {["mañana", "tarde"].map(periodo => (
           <div key={periodo}>
@@ -170,7 +176,8 @@ const ReservaImplementoDetalle = () => {
             Confirmar reserva
           </button>
         </div>
-      )}
+      )}</>
+      )},
     </div>
   );
 };
